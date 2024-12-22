@@ -1,6 +1,9 @@
+use 5.020;
+use stable qw( postderef );
+use true;
+
 package Dist::Zilla::Plugin::Author::Plicease::Init2 {
 
-  use 5.020;
   use Moose;
   use Dist::Zilla::File::InMemory;
   use Dist::Zilla::File::FromCode;
@@ -9,7 +12,6 @@ package Dist::Zilla::Plugin::Author::Plicease::Init2 {
   use Dist::Zilla::MintingProfile::Author::Plicease;
   use JSON::PP qw( encode_json );
   use Encode qw( encode_utf8 );
-  use experimental qw( postderef );
 
   # ABSTRACT: Dist::Zilla initialization tasks for Plicease
 
@@ -228,11 +230,12 @@ Create a dist in plicease style.
   sub gather_file_simple
   {
     my($self, $filename) = @_;
-    my $content = $self->section_data("dist/$filename");
+    my $content = $self->section_data("dist/$filename")->$*;
+    $content =~ s/\s*\z/"\n"/e;
     $self->log_fatal("no bundled file dist/$filename") unless $content;
     my $file = Dist::Zilla::File::InMemory->new({
       name    => $filename,
-      content => $$content,
+      content => $content,
     });
     $self->add_file($file);
   }
@@ -241,7 +244,8 @@ Create a dist in plicease style.
   {
     my($self, $template_name, $filename) = @_;
     $filename //= $template_name;
-    my $template = ${ $self->section_data("template/$template_name") };
+    my $template = $self->section_data("template/$template_name")->$*;
+    $template =~ s/\s*\z/"\n"/e;
     $self->log_fatal("no bundled template: template/$template_name") unless $template;
     my $content = $self->fill_in_string($template, {
       name         => $self->zilla->name,
@@ -423,8 +427,6 @@ Create a dist in plicease style.
 
   __PACKAGE__->meta->make_immutable;
 }
-
-1;
 
 package Dist::Zilla::Plugin::Author::Plicease::Init2;
 
