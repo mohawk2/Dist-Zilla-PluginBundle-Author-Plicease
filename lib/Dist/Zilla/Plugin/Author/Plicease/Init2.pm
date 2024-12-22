@@ -73,6 +73,19 @@ Create a dist in plicease style.
     },
   );
 
+  has type_app => (
+    is      => 'ro',
+    lazy    => 1,
+    default => sub {
+      my $name = shift->zilla->name;
+      if($name =~ /^App-([a-z0-9]+)$/) {
+        return $1;
+      } else {
+        return undef;
+      }
+    },
+  );
+
   has workflow => (
     is      => 'ro',
     isa     => 'ArrayRef[Str]',
@@ -156,6 +169,10 @@ Create a dist in plicease style.
     {
       $template_name = 'Alien.pm';
     }
+    elsif($self->type_app)
+    {
+      $template_name = 'App.pm';
+    }
     elsif($self->perl_version >= 5.020)
     {
       $template_name = 'P5020.pm';
@@ -171,6 +188,12 @@ Create a dist in plicease style.
 
     (my $filename = $arg->{name}) =~ s{::}{/}g;
     $self->gather_file_template($template_name => "lib/$filename.pm");
+
+    if($template_name eq 'App.pm') {
+      $self->gather_file_template("bin.pl" => "bin/@{[ $self->type_app ]}");
+      $self->gather_file_template("AppCommand.pm" => "lib/$filename/Command.pm");
+      $self->gather_file_template("AppCommandImpl.pm" => "lib/$filename/Command/foo.pm");
+    }
   }
 
   sub experimental
@@ -646,43 +669,111 @@ use base qw( Alien::Base );
 use warnings;
 use {{ $perl_version }};
 use experimental qw( {{ $experimental }} );
+use true;
 
 package {{ $name =~ s/-/::/gr }} {
 
-  use Moose;
-  use namespace::autoclean;
+    use Moose;
+    use namespace::autoclean;
 
-  # ABSTRACT: {{ $abstract }}
+    # ABSTRACT: {{ $abstract }}
 
-  __PACKAGE__->meta->make_immutable;
+    __PACKAGE__->meta->make_immutable;
 }
-
-1;
 
 
 @@ template/P5014.pm
 use warnings;
 use {{ $perl_version }};
+use true;
 
 package {{ $name =~ s/-/::/gr }} {
 
-  # ABSTRACT: {{ $abstract }}
+    # ABSTRACT: {{ $abstract }}
 }
-
-1;
 
 
 @@ template/P5020.pm
 use warnings;
 use {{ $perl_version }};
 use experimental qw( {{ $experimental }} );
+use true;
 
 package {{ $name =~ s/-/::/gr }} {
 
-  # ABSTRACT: {{ $abstract }}
+    # ABSTRACT: {{ $abstract }}
 }
 
-1;
+
+@@ template/bin.pl
+use warnings;
+use {{ $perl_version }};
+use lib::findbin '../lib'; # dev-only
+use {{ $name =~ s/-/::/gr }};
+
+{{ $name =~ s/-/::/gr }}->run;
+
+# PODNAME: {{ $name =~ s/^.*-//gr }}
+# ABSTRACT: {{ $abstract }}
+
+
+@@ template/App.pm
+use warnings;
+use {{ $perl_version }};
+use experimental qw( {{ $experimental }} );
+use true;
+
+package {{ $name =~ s/-/::/gr }} {
+
+    # ABSTRACT: {{ $abstract }}
+
+    use App::Cmd::Setup -app;
+
+}
+
+
+@@ template/AppCommand.pm
+use warnings;
+use {{ $perl_version }};
+use experimental qw( {{ $experimental }} );
+use true;
+
+package {{ $name =~ s/-/::/gr }}::Command {
+
+    # ABSTRACT: {{ $abstract }}
+
+    use App::Cmd::Setup -command;
+
+    sub opt_spec ($self) {
+    }
+
+    sub validate_args ($self, $opt, $args) {
+    }
+}
+
+
+@@ template/AppCommandImpl.pm
+use warnings;
+use {{ $perl_version }};
+use experimental qw( {{ $experimental }} );
+use true;
+
+package {{ $name =~ s/-/::/gr }}::Command::foo {
+
+    # ABSTRACT: {{ $abstract }}
+
+    use App::Cmd::Setup -command;
+
+    sub opt_spec ($self) {
+    }
+
+    sub validate_args ($self, $opt, $args) {
+    }
+
+    sub execute ($self, $opt, $args) {
+    }
+}
+
 
 @@ dist/.github/workflows/static.yml
 name: static
