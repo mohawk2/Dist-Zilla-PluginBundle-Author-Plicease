@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+2.79      2024-12-22 09:20:54 -0700
   - Update linux workflow to test back to 5.20 by default
   - Add .vscode/settings.json to minted dist
   - Add app template
