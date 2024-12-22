@@ -302,6 +302,7 @@ Create a dist in plicease style.
       workflow       => $self->workflow,
       irc            => $self->irc,
       default_branch => 'main',
+      is_app         => !!$self->type_app,
     };
 
     my $code = sub {
@@ -615,13 +616,17 @@ test2_v0       = 1
   $extra .= "version_plugin = $version_plugin\n" if $version_plugin;
   $extra .= "irc            = $irc\n" if $irc;
 
+  if($is_app) {
+      $extra .= "\n[SetScriptShebang]\n[CommentOut]"
+  }
+
   $extra;
 
 }}
 [Author::Plicease::Core]
 
 [Author::Plicease::Upload]
-cpan = 0
+cpan = 1
 
 
 @@ template/.gitignore
