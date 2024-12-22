@@ -213,6 +213,7 @@ Create a dist in plicease style.
     $self->gather_file_dist_ini($arg);
 
     $self->gather_file_simple  ('.gitattributes');
+    $self->gather_file_simple  ('.vscode/settings.json');
     $self->gather_file_template('.gitignore');
     $self->gather_file_simple  ('alienfile') if $self->type_alien;
     $self->gather_file_simple  ('author.yml');
@@ -461,6 +462,15 @@ pod_coverage:
   # format is "Class#method" or "Class",regex allowed
   # for either Class or method.
   private: []
+
+
+@@ dist/.vscode/settings.json
+{
+    "pls.perlcritic.perlcriticrc": "perlcriticrc",
+    "pls.inc": [
+        "$ROOT_PATH/lib"
+    ]
+}
 
 
 @@ dist/perlcriticrc
