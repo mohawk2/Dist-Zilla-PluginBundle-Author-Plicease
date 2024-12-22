@@ -432,7 +432,6 @@ package Dist::Zilla::Plugin::Author::Plicease::Init2;
 
 __DATA__
 
-
 @@ dist/alienfile
 use alienfile;
 plugin 'PkgConfig' => 'libfoo';
