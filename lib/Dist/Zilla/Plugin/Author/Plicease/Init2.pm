@@ -5,7 +5,7 @@ package Dist::Zilla::Plugin::Author::Plicease::Init2 {
   use Dist::Zilla::File::InMemory;
   use Dist::Zilla::File::FromCode;
   use Sub::Exporter::ForMethods qw( method_installer );
-  use Data::Section { installer => method_installer }, -setup;
+  use Data::Section { installer => method_installer }, -setup => { header_re => qr/^@@ (.*?)$/ };
   use Dist::Zilla::MintingProfile::Author::Plicease;
   use JSON::PP qw( encode_json );
   use Encode qw( encode_utf8 );
@@ -431,7 +431,7 @@ package Dist::Zilla::Plugin::Author::Plicease::Init2;
 __DATA__
 
 
-__[ dist/alienfile ]__
+@@ dist/alienfile
 use alienfile;
 plugin 'PkgConfig' => 'libfoo';
 share {
@@ -445,7 +445,7 @@ share {
 };
 
 
-__[ dist/author.yml ]__
+@@ dist/author.yml
 ---
 pod_spelling_system:
   skip: 0
@@ -462,7 +462,7 @@ pod_coverage:
   private: []
 
 
-__[ dist/perlcriticrc ]__
+@@ dist/perlcriticrc
 severity = 1
 only = 1
 
@@ -524,7 +524,7 @@ allow_leading_tabs = 0
 [Variables::ProhibitUnusedVariables]
 
 
-__[ dist/xt/author/critic.t ]__
+@@ dist/xt/author/critic.t
 use Test2::Require::Module 'Test2::Tools::PerlCritic';
 use Test2::Require::Module 'Perl::Critic';
 use Test2::Require::Module 'Perl::Critic::Community';
@@ -541,20 +541,20 @@ perl_critic_ok ['lib','t'], $critic;
 done_testing;
 
 
-__[ dist/.gitattributes ]__
+@@ dist/.gitattributes
 *.pm linguist-language=Perl
 *.t linguist-language=Perl
 *.h linguist-language=C
 
 
-__[ dist/Changes ]__
+@@ dist/Changes
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
   - initial version
 
 
-__[ template/dist.ini ]__
+@@ template/dist.ini
 name             = {{$name}}
 author           = Graham Ollis <plicease@cpan.org>
 license          = Perl_5
@@ -590,13 +590,13 @@ test2_v0       = 1
 cpan = 0
 
 
-__[ template/.gitignore ]__
+@@ template/.gitignore
 {{ $name }}-*
 /.build/
 *.swp
 
 
-__[ template/t/main_class.t ]__
+@@ template/t/main_class.t
 use Test2::V0 -no_srand => 1;
 use {{ $name =~ s/-/::/gr }};
 
@@ -605,7 +605,7 @@ ok 1, 'todo';
 done_testing;
 
 
-__[ template/Default.pm ]__
+@@ template/Default.pm
 package {{ $name =~ s/-/::/gr }};
 
 use strict;
@@ -618,7 +618,7 @@ use {{ $perl_version }};
 1;
 
 
-__[ template/Alien.pm ]__
+@@ template/Alien.pm
 package {{ $name =~ s/-/::/gr }};
 
 use strict;
@@ -631,8 +631,7 @@ use base qw( Alien::Base );
 
 1;
 
-
-__[ template/Dzil.pm ]__
+@@ template/Dzil.pm
 use warnings;
 use {{ $perl_version }};
 use experimental qw( {{ $experimental }} );
@@ -650,7 +649,7 @@ package {{ $name =~ s/-/::/gr }} {
 1;
 
 
-__[ template/P5014.pm ]__
+@@ template/P5014.pm
 use warnings;
 use {{ $perl_version }};
 
@@ -662,7 +661,7 @@ package {{ $name =~ s/-/::/gr }} {
 1;
 
 
-__[ template/P5020.pm ]__
+@@ template/P5020.pm
 use warnings;
 use {{ $perl_version }};
 use experimental qw( {{ $experimental }} );
@@ -674,7 +673,7 @@ package {{ $name =~ s/-/::/gr }} {
 
 1;
 
-__[ dist/.github/workflows/static.yml ]__
+@@ dist/.github/workflows/static.yml
 name: static
 
 on:
@@ -705,7 +704,7 @@ jobs:
           cip script
 
 
-__[ dist/.github/workflows/linux.yml ]__
+@@ dist/.github/workflows/linux.yml
 name: linux
 
 on:
@@ -737,8 +736,6 @@ jobs:
           - "5.24"
           - "5.22"
           - "5.20"
-          - "5.18"
-          - "5.16"
 
     env:
       CIP_TAG: ${{ matrix.cip_tag }}
@@ -786,7 +783,7 @@ jobs:
           cip exec bash -c 'cat $HOME/.cpanm/latest-build/build.log'
 
 
-__[ dist/.github/workflows/windows.yml ]__
+@@ dist/.github/workflows/windows.yml
 name: windows
 
 on:
@@ -857,7 +854,7 @@ jobs:
         run: dzil test -v
 
 
-__[ dist/.github/workflows/macos.yml ]__
+@@ dist/.github/workflows/macos.yml
 name: macos
 
 on:
@@ -925,7 +922,7 @@ jobs:
           cat ~/.cpanm/latest-build/build.log
 
 
-__[ dist/.github/workflows/cygwin.yml ]__
+@@ dist/.github/workflows/cygwin.yml
 name: cygwin
 
 on:
@@ -1018,7 +1015,7 @@ jobs:
 
 
 
-__[ dist/.github/workflows/msys2-mingw.yml ]__
+@@ dist/.github/workflows/msys2-mingw.yml
 name: msys2-mingw
 
 on:
