@@ -601,6 +601,7 @@ use Test::Spelling;
 use YAML qw( LoadFile );
 use FindBin;
 use File::Spec;
+use Encode;
 
 my $config_filename = File::Spec->catfile(
   $FindBin::Bin, File::Spec->updir, File::Spec->updir, 'author.yml'
@@ -614,7 +615,7 @@ plan skip_all => 'disabled' if $config->{pod_spelling_system}->{skip};
 
 chdir(File::Spec->catdir($FindBin::Bin, File::Spec->updir, File::Spec->updir));
 
-add_stopwords($config->{pod_spelling_system}->{stopwords}->@*);
+add_stopwords(map encode('UTF-8', $_, Encode::LEAVE_SRC|Encode::FB_CROAK), $config->{pod_spelling_system}->{stopwords}->@*); # Test::Spelling needs octets not characters
 add_stopwords(qw(
 Plicease
 stdout
