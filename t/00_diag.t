@@ -59,7 +59,6 @@ $modules{$_} = $_ for qw(
   YAML
   namespace::autoclean
   stable
-  true
 );
 
 $post_diag = sub {

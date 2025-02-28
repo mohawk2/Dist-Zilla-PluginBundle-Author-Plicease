@@ -1,6 +1,5 @@
 use 5.020;
 use stable qw( postderef );
-use true;
 
 package Dist::Zilla::Plugin::Author::Plicease::Init2 {
 
@@ -454,6 +453,7 @@ Create a dist in plicease style.
 }
 
 package Dist::Zilla::Plugin::Author::Plicease::Init2;
+1;
 
 __DATA__
 
@@ -674,7 +674,6 @@ use base qw( Alien::Base );
 use warnings;
 use {{ $perl_version }};
 use experimental qw( {{ $experimental }} );
-use true;
 
 package {{ $name =~ s/-/::/gr }} {
 
@@ -685,29 +684,30 @@ package {{ $name =~ s/-/::/gr }} {
 
     __PACKAGE__->meta->make_immutable;
 }
+1;
 
 
 @@ template/P5014.pm
 use warnings;
 use {{ $perl_version }};
-use true;
 
 package {{ $name =~ s/-/::/gr }} {
 
     # ABSTRACT: {{ $abstract }}
 }
+1;
 
 
 @@ template/P5020.pm
 use warnings;
 use {{ $perl_version }};
 use experimental qw( {{ $experimental }} );
-use true;
 
 package {{ $name =~ s/-/::/gr }} {
 
     # ABSTRACT: {{ $abstract }}
 }
+1;
 
 
 @@ template/bin.pl
@@ -726,7 +726,6 @@ use {{ $name =~ s/-/::/gr }};
 use warnings;
 use {{ $perl_version }};
 use experimental qw( {{ $experimental }} );
-use true;
 
 package {{ $name =~ s/-/::/gr }} {
 
@@ -735,13 +734,13 @@ package {{ $name =~ s/-/::/gr }} {
     use App::Cmd::Setup -app;
 
 }
+1;
 
 
 @@ template/AppCommand.pm
 use warnings;
 use {{ $perl_version }};
 use experimental qw( {{ $experimental }} );
-use true;
 
 package {{ $name =~ s/-/::/gr }}::Command {
 
@@ -755,13 +754,13 @@ package {{ $name =~ s/-/::/gr }}::Command {
     sub validate_args ($self, $opt, $args) {
     }
 }
+1;
 
 
 @@ template/AppCommandImpl.pm
 use warnings;
 use {{ $perl_version }};
 use experimental qw( {{ $experimental }} );
-use true;
 
 package {{ $name =~ s/-/::/gr }}::Command::foo {
 
@@ -778,6 +777,7 @@ package {{ $name =~ s/-/::/gr }}::Command::foo {
     sub execute ($self, $opt, $args) {
     }
 }
+1;
 
 
 @@ dist/.github/workflows/static.yml
